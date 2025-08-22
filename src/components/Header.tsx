@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bus, MapPin, Menu, X, Phone, Mail, Info } from 'lucide-react';
+import { Bus, MapPin, Menu, X, Phone, Mail, Info, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link, useLocation } from 'react-router-dom';
@@ -23,6 +23,30 @@ const Header: React.FC = () => {
     }
     return location.pathname.startsWith(href);
   };
+
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('app-theme') as 'light' | 'dark') || 'light';
+  });
+
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    if (next === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('app-theme', next);
+  };
+
+  // initialize on mount
+  React.useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-rural-green to-rural-leaf shadow-strong">
@@ -56,11 +80,29 @@ const Header: React.FC = () => {
               </Link>
             ))}
             <LanguageToggle />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleTheme}
+              className="bg-white/10 text-white border-white/30 hover:bg-white/20"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
           </nav>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-3 md:hidden">
             <LanguageToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="text-white hover:bg-white/20"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button

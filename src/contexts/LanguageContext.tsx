@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-type Language = 'en' | 'te';
+type Language = 'en' | 'te' | 'hi';
 
 interface LanguageContextType {
   language: Language;
+  setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
   t: (key: string) => string;
 }
@@ -64,16 +65,51 @@ const translations = {
     'route.map': 'మార్గ పటం',
     'voice.search': 'వాయిస్ శోధన',
     'return.trip': 'తిరుగు ప్రయాణం ప్లాన్ చేయండి'
+  },
+  hi: {
+    'route.finder': 'ग्रामीण बस मार्ग खोजक',
+    'route.subtitle': 'अपने गाँव के लिए सर्वोत्तम मार्ग खोजें',
+    'search.from': 'से (शहर)',
+    'search.to': 'तक (गाँव/कस्बा)',
+    'search.placeholder.from': 'शहर का नाम दर्ज करें',
+    'search.placeholder.to': 'गाँव का नाम दर्ज करें',
+    'search.find': 'मार्ग खोजें',
+    'search.finding': 'मार्ग खोजा जा रहा है...',
+    'search.quick': 'त्वरित खोज:',
+    'journey.steps': 'यात्रा चरण',
+    'journey.transfers': 'बदलाव',
+    'journey.transfers.plural': 'बदलाव',
+    'journey.take.bus': 'लें',
+    'journey.walk': 'चलें',
+    'journey.steps.count': 'चरण',
+    'journey.bus.rides': 'बस यात्राएँ',
+    'journey.transfers.count': 'बदलाव',
+    'journey.total.time': 'कुल समय',
+    'journey.estimated.fare': 'अनुमानित किराया',
+    'route.fastest': 'सबसे तेज़ मार्ग',
+    'route.cheapest': 'किफायती मार्ग',
+    'route.comfortable': 'सुविधाजनक मार्ग',
+    'route.direct': 'सीधा मार्ग',
+    'route.map': 'मार्ग मानचित्र',
+    'voice.search': 'वॉइस खोज',
+    'return.trip': 'वापसी यात्रा की योजना बनाएं'
   }
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('app-language') as Language | null;
+    return saved || 'en';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('app-language', language);
+  }, [language]);
 
   const toggleLanguage = () => {
-    setLanguage(prev => prev === 'en' ? 'te' : 'en');
+    setLanguage(prev => (prev === 'en' ? 'te' : prev === 'te' ? 'hi' : 'en'));
   };
 
   const t = (key: string): string => {
@@ -81,7 +117,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
