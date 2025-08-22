@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AlertCircle, Bus, MapPin, Clock, Download, MessageSquare } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import RouteSearch from '@/components/RouteSearch';
 import JourneyResults, { type JourneyPlan } from '@/components/JourneyResults';
 import RouteOptions from '@/components/RouteOptions';
@@ -16,6 +16,7 @@ const IndexContent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
 
   const handleSearch = async (from: string, to: string) => {
     setLoading(true);
@@ -51,6 +52,16 @@ const IndexContent = () => {
       handleSearch(selectedRoute.journey.to, selectedRoute.journey.from);
     }
   };
+
+  // Support prefilled search via URL params: /?from=CityA&to=CityB
+  useEffect(() => {
+    const fromParam = searchParams.get('from');
+    const toParam = searchParams.get('to');
+    if (fromParam && toParam) {
+      handleSearch(fromParam, toParam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-rural-sand/20 to-secondary/10">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, MapPin, Clock, IndianRupee, Trash2, RefreshCw, Wifi, WifiOff, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,41 +20,14 @@ interface OfflineRoute {
 
 const OfflineRoutes: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [offlineRoutes, setOfflineRoutes] = useState<OfflineRoute[]>([
-    {
-      id: '1',
-      from: 'Hyderabad',
-      to: 'Karimnagar',
-      duration: '2h 30m',
-      fare: 120,
-      downloadedAt: '2024-01-15',
-      expiresAt: '2024-02-15',
-      size: '2.4 MB',
-      isExpired: false
-    },
-    {
-      id: '2',
-      from: 'Vijayawada',
-      to: 'Kotha Rajanagaram',
-      duration: '1h 45m',
-      fare: 85,
-      downloadedAt: '2024-01-10',
-      expiresAt: '2024-02-10',
-      size: '1.8 MB',
-      isExpired: false
-    },
-    {
-      id: '3',
-      from: 'Warangal',
-      to: 'Bhadrachalam',
-      duration: '3h 15m',
-      fare: 150,
-      downloadedAt: '2024-01-05',
-      expiresAt: '2024-02-05',
-      size: '3.1 MB',
-      isExpired: true
-    }
-  ]);
+  const [offlineRoutes, setOfflineRoutes] = useState<OfflineRoute[]>([]);
+
+  // Load from localStorage
+  useEffect(() => {
+    const key = 'offlineRoutes';
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    setOfflineRoutes(stored);
+  }, []);
 
   const [newRouteForm, setNewRouteForm] = useState({
     from: '',

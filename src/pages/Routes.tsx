@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useNavigate } from 'react-router-dom';
 
 interface Route {
   id: string;
@@ -25,80 +26,57 @@ const Routes: React.FC = () => {
   const [filterOperator, setFilterOperator] = useState('all');
   const [routes, setRoutes] = useState<Route[]>([]);
   const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  const navigate = useNavigate();
 
-  // Sample routes data
+  // Sample routes data (updated to match new routes)
   useEffect(() => {
     const sampleRoutes: Route[] = [
       {
         id: '1',
-        from: 'Hyderabad',
-        to: 'Karimnagar',
+        from: 'Vijayawada',
+        to: 'Buttayagudem',
         type: 'Express',
-        duration: '2h 30m',
-        fare: 120,
-        transfers: 0,
-        frequency: 'Every 30 min',
-        operator: 'TSRTC',
+        duration: '4h 45m',
+        fare: 260,
+        transfers: 2,
+        frequency: 'Every 1 hour',
+        operator: 'APSRTC',
         isFavorite: false
       },
       {
         id: '2',
-        from: 'Vijayawada',
-        to: 'Kotha Rajanagaram',
+        from: 'Rajahmundry',
+        to: 'Maredumilli',
         type: 'Local',
-        duration: '1h 45m',
-        fare: 85,
+        duration: '3h 00m',
+        fare: 200,
         transfers: 1,
-        frequency: 'Every 1 hour',
+        frequency: 'Every 1.5 hours',
         operator: 'APSRTC',
-        isFavorite: true
+        isFavorite: false
       },
       {
         id: '3',
-        from: 'Warangal',
-        to: 'Bhadrachalam',
+        from: 'Rajahmundry',
+        to: 'Rampachodavaram',
         type: 'Express',
-        duration: '3h 15m',
-        fare: 150,
+        duration: '1h 40m',
+        fare: 125,
         transfers: 0,
-        frequency: 'Every 2 hours',
-        operator: 'TSRTC',
+        frequency: 'Every 45 min',
+        operator: 'APSRTC',
         isFavorite: false
       },
       {
         id: '4',
-        from: 'Karimnagar',
-        to: 'Nizamabad',
-        type: 'Local',
-        duration: '2h 0m',
-        fare: 95,
+        from: 'Visakhapatnam',
+        to: 'Chintapalli',
+        type: 'Comfort',
+        duration: '4h 30m',
+        fare: 245,
         transfers: 1,
-        frequency: 'Every 45 min',
-        operator: 'TSRTC',
-        isFavorite: false
-      },
-      {
-        id: '5',
-        from: 'Nalgonda',
-        to: 'Suryapet',
-        type: 'Express',
-        duration: '1h 30m',
-        fare: 70,
-        transfers: 0,
-        frequency: 'Every 20 min',
-        operator: 'TSRTC',
-        isFavorite: false
-      },
-      {
-        id: '6',
-        from: 'Khammam',
-        to: 'Bhadrachalam',
-        type: 'Local',
-        duration: '2h 45m',
-        fare: 110,
-        transfers: 1,
-        frequency: 'Every 1 hour',
-        operator: 'TSRTC',
+        frequency: 'Every 2 hours',
+        operator: 'APSRTC',
         isFavorite: false
       }
     ];
@@ -122,9 +100,54 @@ const Routes: React.FC = () => {
     setFilteredRoutes(filtered);
   }, [searchTerm, filterType, filterOperator, routes]);
 
+  const saveOfflineRoute = (offline: {
+    id: string;
+    from: string;
+    to: string;
+    duration: string;
+    fare: number;
+  }) => {
+    const key = 'offlineRoutes';
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    const newEntry = {
+      ...offline,
+      downloadedAt: new Date().toISOString().split('T')[0],
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      size: '~2.0 MB',
+      isExpired: false
+    };
+    const updated = [newEntry, ...existing];
+    localStorage.setItem(key, JSON.stringify(updated));
+  };
+
   const handleDownload = (route: Route) => {
-    // Implementation for downloading route
-    console.log('Downloading route:', route);
+    // Persist to offline routes storage
+    saveOfflineRoute({
+      id: Date.now().toString(),
+      from: route.from,
+      to: route.to,
+      duration: route.duration,
+      fare: route.fare,
+    });
+
+    // Also offer a JSON file download for mobile users
+    const data = {
+      from: route.from,
+      to: route.to,
+      duration: route.duration,
+      fare: route.fare,
+      operator: route.operator,
+      savedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${route.from.replace(/\s+/g,'_')}-${route.to.replace(/\s+/g,'_')}-route.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
 
   const handleShare = (route: Route) => {
@@ -138,6 +161,11 @@ const Routes: React.FC = () => {
     } else {
       navigator.clipboard.writeText(shareText);
     }
+  };
+
+  const handleView = (route: Route) => {
+    const params = new URLSearchParams({ from: route.from, to: route.to });
+    navigate(`/?${params.toString()}`);
   };
 
   const toggleFavorite = (routeId: string) => {
@@ -307,6 +335,7 @@ const Routes: React.FC = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => handleView(route)}
                     className="border-rural-orange text-rural-orange hover:bg-rural-orange hover:text-white"
                   >
                     <MapPin className="h-4 w-4 mr-1" />
