@@ -19,6 +19,16 @@ interface RouteMapProps {
 const locationCoords: { [key: string]: [number, number] } = {
   'Vijayawada': [16.5062, 80.6480],
   'Vijayawada PNBS': [16.5062, 80.6480],
+  // New Andhra routes
+  'Eluru': [16.7107, 81.0952],
+  'Jangareddygudem': [17.1103, 81.2920],
+  'Buttayagudem': [17.2500, 81.5500],
+  'Rajahmundry': [17.0005, 81.8040],
+  'Rampachodavaram': [17.4456, 81.7782],
+  'Maredumilli': [17.5970, 82.1928],
+  'Visakhapatnam': [17.6868, 83.2185],
+  'Narsipatnam': [17.6672, 82.6121],
+  'Chintapalli': [17.4983, 82.3456],
   'Rajahmundry RTC': [17.0005, 81.7880],
   'Kotha Rajanagaram': [17.0205, 81.8180],
   'Kotha Rajanagaram X Road': [17.0205, 81.8180],
