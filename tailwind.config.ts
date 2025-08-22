@@ -73,7 +73,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Rural Theme Colors
+				'rural-green': 'hsl(var(--rural-green))',
+				'rural-orange': 'hsl(var(--rural-orange))',
+				'rural-sky': 'hsl(var(--rural-sky))',
+				'rural-earth': 'hsl(var(--rural-earth))',
+				'rural-sand': 'hsl(var(--rural-sand))',
+				'rural-leaf': 'hsl(var(--rural-leaf))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

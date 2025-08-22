@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, MapPin, ArrowRight } from 'lucide-react';
+import { Search, MapPin, ArrowRight, Bus, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -54,100 +54,145 @@ const RouteSearch: React.FC<RouteSearchProps> = ({ onSearch, loading }) => {
   ];
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardContent className="p-6">
-        <div className="text-center mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold text-foreground">
-              🚍 {t('route.finder')}
-            </h1>
-            <LanguageToggle />
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Hero Section */}
+      <div className="text-center mb-8">
+        <div className="flex justify-center items-center mb-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-rural-green to-rural-leaf shadow-strong mb-4">
+            <Bus className="h-8 w-8 text-white" />
           </div>
-          <p className="text-muted-foreground">
-            {t('route.subtitle')}
-          </p>
         </div>
+        <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          Plan Your Rural Journey
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Discover the easiest way to travel between villages. Find bus routes, schedules, and plan your trip with confidence.
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">{t('search.from')}</label>
-              <div className="space-y-2">
+      {/* Search Form Card */}
+      <Card className="rural-card shadow-strong">
+        <CardContent className="p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* From Location */}
+              <div className="space-y-3">
+                <label className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-rural-green" />
+                  {t('search.from')}
+                </label>
+                <div className="space-y-3">
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-4 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder={t('search.placeholder.from')}
+                      value={from}
+                      onChange={(e) => setFrom(e.target.value)}
+                      className="rural-input pl-12 py-4 text-lg"
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <LocationButton onLocationFound={handleLocationFound} />
+                    <VoiceSearch onVoiceResult={handleVoiceResult} />
+                  </div>
+                </div>
+              </div>
+
+              {/* To Location */}
+              <div className="space-y-3">
+                <label className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <Navigation className="h-5 w-5 text-rural-orange" />
+                  {t('search.to')}
+                </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <MapPin className="absolute left-4 top-4 h-5 w-5 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder={t('search.placeholder.from')}
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                    className="pl-10"
+                    placeholder={t('search.placeholder.to')}
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                    className="rural-input pl-12 py-4 text-lg"
                     required
                   />
                 </div>
-                <div className="flex gap-2">
-                  <LocationButton onLocationFound={handleLocationFound} />
-                  <VoiceSearch onVoiceResult={handleVoiceResult} />
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <Button 
+              type="submit" 
+              className="rural-button-primary w-full py-4 text-lg font-semibold touch-target" 
+              disabled={loading || !from.trim() || !to.trim()}
+            >
+              {loading ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  {t('search.finding')}
                 </div>
-              </div>
-            </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <Search className="h-5 w-5" />
+                  {t('search.find')}
+                </div>
+              )}
+            </Button>
+          </form>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">{t('search.to')}</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder={t('search.placeholder.to')}
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
+          {/* Quick Search Options */}
+          <div className="mt-8 pt-6 border-t border-border/50">
+            <p className="text-sm font-medium text-muted-foreground mb-4 flex items-center gap-2">
+              <Bus className="h-4 w-4" />
+              {t('search.quick')}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {quickSearchOptions.map((option, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setFrom(option.from);
+                    setTo(option.to);
+                  }}
+                  className="text-sm border-rural-green/30 text-rural-green hover:bg-rural-green hover:text-white transition-smooth"
+                >
+                  {option.from} <ArrowRight className="h-4 w-4 mx-2" /> {option.to}
+                </Button>
+              ))}
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <Button 
-            type="submit" 
-            className="w-full" 
-            size="lg"
-            disabled={loading || !from.trim() || !to.trim()}
-          >
-            {loading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                {t('search.finding')}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Search className="h-4 w-4" />
-                {t('search.find')}
-              </div>
-            )}
-          </Button>
-        </form>
-
-        <div className="mt-6">
-          <p className="text-sm text-muted-foreground mb-3">{t('search.quick')}</p>
-          <div className="flex flex-wrap gap-2">
-            {quickSearchOptions.map((option, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setFrom(option.from);
-                  setTo(option.to);
-                }}
-                className="text-xs"
-              >
-                {option.from} <ArrowRight className="h-3 w-3 mx-1" /> {option.to}
-              </Button>
-            ))}
+      {/* Feature Showcase */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <Card className="rural-card text-center p-6 hover:scale-105 transition-smooth">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rural-green/10 mx-auto mb-4">
+            <MapPin className="h-6 w-6 text-rural-green" />
           </div>
-        </div>
-      </CardContent>
-    </Card>
+          <h3 className="text-lg font-semibold mb-2">Offline Maps</h3>
+          <p className="text-muted-foreground text-sm">Download routes for offline use in remote areas</p>
+        </Card>
+
+        <Card className="rural-card text-center p-6 hover:scale-105 transition-smooth">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rural-orange/10 mx-auto mb-4">
+            <Bus className="h-6 w-6 text-rural-orange" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Real-time Updates</h3>
+          <p className="text-muted-foreground text-sm">Get live bus timings and route changes</p>
+        </Card>
+
+        <Card className="rural-card text-center p-6 hover:scale-105 transition-smooth">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rural-sky/10 mx-auto mb-4">
+            <Navigation className="h-6 w-6 text-rural-sky" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Smart Navigation</h3>
+          <p className="text-muted-foreground text-sm">Find the best routes with walking directions</p>
+        </Card>
+      </div>
+    </div>
   );
 };
 
