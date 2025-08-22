@@ -13,289 +13,87 @@ export interface RouteOption {
 
 // Mock route data with multiple alternatives for each route
 const mockRoutes: { [key: string]: RouteOption[] } = {
-  'vijayawada-kotha-rajanagaram': [
+  'vijayawada-buttayagudem': [
     {
-      id: 'fast-1',
+      id: 'vjw-btg-fast',
       type: 'fastest',
-      label: 'Fastest Route',
-      highlights: ['Quickest journey', 'Express buses', '1 transfer'],
-      estimatedFare: 85,
+      label: 'Vijayawada → Buttayagudem',
+      highlights: ['3 buses', '1 ticket per leg', 'Rural connectivity'],
+      estimatedFare: 275,
       firstBus: '5:30 AM',
-      lastBus: '9:45 PM',
+      lastBus: '9:00 PM',
       journey: {
         from: 'Vijayawada',
-        to: 'Kotha Rajanagaram',
+        to: 'Buttayagudem',
         itinerary: [
-          {
-            mode: 'walk',
-            from: 'PNBS Gate 2',
-            to: 'Bay 6',
-            eta_min: 5
-          },
-          {
-            mode: 'bus',
-            route: 'APSRTC 600 Express',
-            from: 'Vijayawada PNBS',
-            to: 'Rajahmundry RTC',
-            eta_min: 135
-          },
-          {
-            mode: 'bus',
-            route: 'City 38A',
-            from: 'Rajahmundry RTC',
-            to: 'Kotha Rajanagaram X Road',
-            eta_min: 25
-          },
-          {
-            mode: 'walk',
-            from: 'X Road',
-            to: 'Village Centre',
-            eta_min: 10
-          }
+          { mode: 'bus', route: 'Bus 101', from: 'Vijayawada', to: 'Eluru', eta_min: 90 },
+          { mode: 'bus', route: 'Bus 202', from: 'Eluru', to: 'Jangareddygudem', eta_min: 120 },
+          { mode: 'bus', route: 'Bus 303', from: 'Jangareddygudem', to: 'Buttayagudem', eta_min: 75 }
         ],
-        total_time_min: 175,
-        transfers: 1
+        total_time_min: 285,
+        transfers: 2
       }
-    },
+    }
+  ],
+  'rajahmundry-maredumilli': [
     {
-      id: 'cheap-1',
-      type: 'cheapest',
-      label: 'Budget Route',
-      highlights: ['Lowest cost', 'Local buses', 'More stops'],
-      estimatedFare: 65,
+      id: 'rjy-mml-direct',
+      type: 'direct',
+      label: 'Rajahmundry → Maredumilli',
+      highlights: ['Forest route', '2 legs', 'Scenic ride'],
+      estimatedFare: 200,
       firstBus: '6:00 AM',
-      lastBus: '8:30 PM',
+      lastBus: '8:00 PM',
       journey: {
-        from: 'Vijayawada',
-        to: 'Kotha Rajanagaram',
+        from: 'Rajahmundry',
+        to: 'Maredumilli',
         itinerary: [
-          {
-            mode: 'walk',
-            from: 'PNBS Gate 2',
-            to: 'Bay 8',
-            eta_min: 7
-          },
-          {
-            mode: 'bus',
-            route: 'APSRTC 601 Local',
-            from: 'Vijayawada PNBS',
-            to: 'Rajahmundry RTC',
-            eta_min: 165
-          },
-          {
-            mode: 'bus',
-            route: 'Village 38B',
-            from: 'Rajahmundry RTC',
-            to: 'Kotha Rajanagaram',
-            eta_min: 35
-          },
-          {
-            mode: 'walk',
-            from: 'Bus Stop',
-            to: 'Village Centre',
-            eta_min: 8
-          }
+          { mode: 'bus', route: 'Bus 111', from: 'Rajahmundry', to: 'Rampachodavaram', eta_min: 105 },
+          { mode: 'bus', route: 'Bus 222', from: 'Rampachodavaram', to: 'Maredumilli', eta_min: 75 }
         ],
-        total_time_min: 215,
+        total_time_min: 180,
         transfers: 1
       }
-    },
+    }
+  ],
+  'rajahmundry-rampachodavaram': [
     {
-      id: 'comfort-1',
-      type: 'comfortable',
-      label: 'Comfort Route',
-      highlights: ['AC buses', 'Reserved seats', 'Less crowded'],
+      id: 'rjy-rcm-direct',
+      type: 'direct',
+      label: 'Rajahmundry → Rampachodavaram',
+      highlights: ['Single bus', 'Hilly stretch'],
       estimatedFare: 125,
-      firstBus: '6:30 AM',
-      lastBus: '10:00 PM',
-      journey: {
-        from: 'Vijayawada',
-        to: 'Kotha Rajanagaram',
-        itinerary: [
-          {
-            mode: 'walk',
-            from: 'PNBS Gate 1',
-            to: 'Premium Bay',
-            eta_min: 3
-          },
-          {
-            mode: 'bus',
-            route: 'APSRTC Garuda Plus',
-            from: 'Vijayawada PNBS',
-            to: 'Rajahmundry RTC',
-            eta_min: 140
-          },
-          {
-            mode: 'bus',
-            route: 'Express 38X',
-            from: 'Rajahmundry RTC',
-            to: 'Kotha Rajanagaram',
-            eta_min: 28
-          },
-          {
-            mode: 'walk',
-            from: 'Main Stop',
-            to: 'Village Centre',
-            eta_min: 5
-          }
-        ],
-        total_time_min: 176,
-        transfers: 1
-      }
-    }
-  ],
-  'hyderabad-karimnagar': [
-    {
-      id: 'direct-1',
-      type: 'direct',
-      label: 'Direct Route',
-      highlights: ['No transfers', 'Express service', 'Direct connection'],
-      estimatedFare: 95,
       firstBus: '5:45 AM',
-      lastBus: '9:15 PM',
-      journey: {
-        from: 'Hyderabad',
-        to: 'Karimnagar',
-        itinerary: [
-          {
-            mode: 'walk',
-            from: 'MGBS Bus Station',
-            to: 'Platform 12',
-            eta_min: 5
-          },
-          {
-            mode: 'bus',
-            route: 'TSRTC Express',
-            from: 'Hyderabad MGBS',
-            to: 'Karimnagar Bus Stand',
-            eta_min: 180
-          },
-          {
-            mode: 'walk',
-            from: 'Bus Stand',
-            to: 'City Center',
-            eta_min: 8
-          }
-        ],
-        total_time_min: 193,
-        transfers: 0
-      }
-    },
-    {
-      id: 'fast-2',
-      type: 'fastest',
-      label: 'Fastest Route',
-      highlights: ['Super Express', 'Highway route', 'Limited stops'],
-      estimatedFare: 105,
-      firstBus: '5:15 AM',
-      lastBus: '9:30 PM',
-      journey: {
-        from: 'Hyderabad',
-        to: 'Karimnagar',
-        itinerary: [
-          {
-            mode: 'walk',
-            from: 'MGBS Bus Station',
-            to: 'Express Platform',
-            eta_min: 4
-          },
-          {
-            mode: 'bus',
-            route: 'TSRTC Super Express',
-            from: 'Hyderabad MGBS',
-            to: 'Karimnagar',
-            eta_min: 165
-          },
-          {
-            mode: 'walk',
-            from: 'Express Stop',
-            to: 'City Center',
-            eta_min: 6
-          }
-        ],
-        total_time_min: 175,
-        transfers: 0
-      }
-    }
-  ],
-  'warangal-bhadrachalam': [
-    {
-      id: 'scenic-1',
-      type: 'comfortable',
-      label: 'Scenic Route',
-      highlights: ['Beautiful views', 'Comfortable buses', 'Rest stops'],
-      estimatedFare: 88,
-      firstBus: '6:15 AM',
-      lastBus: '8:45 PM',
-      journey: {
-        from: 'Warangal',
-        to: 'Bhadrachalam',
-        itinerary: [
-          {
-            mode: 'walk',
-            from: 'Warangal Bus Station',
-            to: 'Bay 4',
-            eta_min: 3
-          },
-          {
-            mode: 'bus',
-            route: 'TSRTC 142K',
-            from: 'Warangal Bus Station',
-            to: 'Khammam RTC',
-            eta_min: 120
-          },
-          {
-            mode: 'bus',
-            route: 'Local 28B',
-            from: 'Khammam RTC',
-            to: 'Bhadrachalam Temple',
-            eta_min: 45
-          },
-          {
-            mode: 'walk',
-            from: 'Temple Stop',
-            to: 'Town Center',
-            eta_min: 5
-          }
-        ],
-        total_time_min: 173,
-        transfers: 1
-      }
-    },
-    {
-      id: 'direct-2',
-      type: 'direct',
-      label: 'Direct Route',
-      highlights: ['Direct connection', 'No transfers', 'Temple express'],
-      estimatedFare: 110,
-      firstBus: '5:00 AM',
       lastBus: '7:30 PM',
       journey: {
-        from: 'Warangal',
-        to: 'Bhadrachalam',
+        from: 'Rajahmundry',
+        to: 'Rampachodavaram',
         itinerary: [
-          {
-            mode: 'walk',
-            from: 'Warangal Bus Station',
-            to: 'Long Distance Bay',
-            eta_min: 5
-          },
-          {
-            mode: 'bus',
-            route: 'TSRTC Bhadrachalam Express',
-            from: 'Warangal',
-            to: 'Bhadrachalam Temple',
-            eta_min: 195
-          },
-          {
-            mode: 'walk',
-            from: 'Temple',
-            to: 'Town Center',
-            eta_min: 8
-          }
+          { mode: 'bus', route: 'Bus 121', from: 'Rajahmundry', to: 'Rampachodavaram', eta_min: 100 }
         ],
-        total_time_min: 208,
+        total_time_min: 100,
         transfers: 0
+      }
+    }
+  ],
+  'visakhapatnam-chintapalli': [
+    {
+      id: 'viz-cpl-scenic',
+      type: 'comfortable',
+      label: 'Visakhapatnam → Chintapalli',
+      highlights: ['Araku belt', 'Ghats', '2 legs'],
+      estimatedFare: 245,
+      firstBus: '5:00 AM',
+      lastBus: '7:00 PM',
+      journey: {
+        from: 'Visakhapatnam',
+        to: 'Chintapalli',
+        itinerary: [
+          { mode: 'bus', route: 'Bus 131', from: 'Visakhapatnam', to: 'Narsipatnam', eta_min: 150 },
+          { mode: 'bus', route: 'Bus 241', from: 'Narsipatnam', to: 'Chintapalli', eta_min: 120 }
+        ],
+        total_time_min: 270,
+        transfers: 1
       }
     }
   ]
@@ -357,8 +155,9 @@ export const findRoute = async (from: string, to: string): Promise<JourneyPlan |
 // Get available routes for demo
 export const getAvailableRoutes = (): Array<{ from: string; to: string }> => {
   return [
-    { from: 'Vijayawada', to: 'Kotha Rajanagaram' },
-    { from: 'Hyderabad', to: 'Karimnagar' },
-    { from: 'Warangal', to: 'Bhadrachalam' }
+    { from: 'Vijayawada', to: 'Buttayagudem' },
+    { from: 'Rajahmundry', to: 'Maredumilli' },
+    { from: 'Rajahmundry', to: 'Rampachodavaram' },
+    { from: 'Visakhapatnam', to: 'Chintapalli' }
   ];
 };

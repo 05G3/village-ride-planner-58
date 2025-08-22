@@ -153,15 +153,15 @@ const IndexContent = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="bg-background/80 p-4 rounded-xl border border-rural-green/20">
                     <div className="font-semibold text-rural-green mb-2">Sample Route 1</div>
-                    <div className="text-muted-foreground">Vijayawada → Kotha Rajanagaram</div>
+                    <div className="text-muted-foreground">Vijayawada → Buttayagudem</div>
                   </div>
                   <div className="bg-background/80 p-4 rounded-xl border border-rural-orange/20">
                     <div className="font-semibold text-rural-orange mb-2">Sample Route 2</div>
-                    <div className="text-muted-foreground">Hyderabad → Karimnagar</div>
+                    <div className="text-muted-foreground">Rajahmundry → Maredumilli</div>
                   </div>
                   <div className="bg-background/80 p-4 rounded-xl border border-rural-sky/20">
                     <div className="font-semibold text-rural-sky mb-2">Sample Route 3</div>
-                    <div className="text-muted-foreground">Warangal → Bhadrachalam</div>
+                    <div className="text-muted-foreground">Visakhapatnam → Chintapalli</div>
                   </div>
                 </div>
               </CardContent>

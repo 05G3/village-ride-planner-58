@@ -48,9 +48,10 @@ const RouteSearch: React.FC<RouteSearchProps> = ({ onSearch, loading }) => {
   };
 
   const quickSearchOptions = [
-    { from: 'Vijayawada', to: 'Kotha Rajanagaram' },
-    { from: 'Hyderabad', to: 'Karimnagar' },
-    { from: 'Warangal', to: 'Bhadrachalam' },
+    { from: 'Vijayawada', to: 'Buttayagudem' },
+    { from: 'Rajahmundry', to: 'Maredumilli' },
+    { from: 'Rajahmundry', to: 'Rampachodavaram' },
+    { from: 'Visakhapatnam', to: 'Chintapalli' },
   ];
 
   return (
