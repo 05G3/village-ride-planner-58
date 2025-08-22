@@ -1,9 +1,10 @@
-import React from 'react';
-import { Clock, MapPin, Bus, Navigation, ArrowRight, IndianRupee, Calendar, Download, MessageSquare, Share2, RotateCcw } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, MapPin, Bus, Navigation, ArrowRight, IndianRupee, Calendar, Download, MessageSquare, Share2, RotateCcw, QrCode } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
+import QRCodeModal from './QRCodeModal';
 
 export interface JourneyStep {
   mode: 'walk' | 'bus';
@@ -36,7 +37,11 @@ const JourneyResults: React.FC<JourneyResultsProps> = ({
   lastBus, 
   onPlanReturn 
 }) => {
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const { t } = useLanguage();
+  
+  const routeUrl = `${window.location.origin}/?from=${encodeURIComponent(journey.from)}&to=${encodeURIComponent(journey.to)}`;
+  const routeTitle = `${journey.from} → ${journey.to}`;
   
   const formatTime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
@@ -82,6 +87,10 @@ const JourneyResults: React.FC<JourneyResultsProps> = ({
   const handleShare = () => {
     // Implementation for sharing
     console.log('Sharing route...');
+  };
+
+  const handleQRCode = () => {
+    setIsQRModalOpen(true);
   };
 
   return (
@@ -133,6 +142,10 @@ const JourneyResults: React.FC<JourneyResultsProps> = ({
             <Button onClick={handleShare} className="rural-button-accent">
               <Share2 className="h-4 w-4 mr-2" />
               Share
+            </Button>
+            <Button onClick={handleQRCode} className="rural-button-accent">
+              <QrCode className="h-4 w-4 mr-2" />
+              QR Code
             </Button>
             {onPlanReturn && (
               <Button variant="outline" onClick={onPlanReturn} className="border-rural-green text-rural-green hover:bg-rural-green hover:text-white">
@@ -279,6 +292,14 @@ const JourneyResults: React.FC<JourneyResultsProps> = ({
           )}
         </CardContent>
       </Card>
+      
+      {/* QR Code Modal */}
+      <QRCodeModal
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+        routeUrl={routeUrl}
+        routeTitle={routeTitle}
+      />
     </div>
   );
 };

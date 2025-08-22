@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Bus, Clock, IndianRupee, Filter, Download, Share2, Heart } from 'lucide-react';
+import { Search, MapPin, Bus, Clock, IndianRupee, Filter, Download, Share2, Heart, QrCode } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
+import QRCodeModal from '@/components/QRCodeModal';
 
 interface Route {
   id: string;
@@ -26,6 +27,8 @@ const Routes: React.FC = () => {
   const [filterOperator, setFilterOperator] = useState('all');
   const [routes, setRoutes] = useState<Route[]>([]);
   const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [selectedRouteForQR, setSelectedRouteForQR] = useState<Route | null>(null);
   const navigate = useNavigate();
 
   // Sample routes data (updated to match new routes)
@@ -166,6 +169,11 @@ const Routes: React.FC = () => {
   const handleView = (route: Route) => {
     const params = new URLSearchParams({ from: route.from, to: route.to });
     navigate(`/?${params.toString()}`);
+  };
+
+  const handleQRCode = (route: Route) => {
+    setSelectedRouteForQR(route);
+    setIsQRModalOpen(true);
   };
 
   const toggleFavorite = (routeId: string) => {
@@ -313,7 +321,7 @@ const Routes: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   <Button
                     variant="outline"
                     size="sm"
@@ -331,6 +339,15 @@ const Routes: React.FC = () => {
                   >
                     <Share2 className="h-4 w-4 mr-1" />
                     Share
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleQRCode(route)}
+                    className="border-rural-earth text-rural-earth hover:bg-rural-earth hover:text-white"
+                  >
+                    <QrCode className="h-4 w-4 mr-1" />
+                    QR
                   </Button>
                   <Button
                     variant="outline"
@@ -364,6 +381,19 @@ const Routes: React.FC = () => {
           </Card>
         )}
       </div>
+      
+      {/* QR Code Modal */}
+      {selectedRouteForQR && (
+        <QRCodeModal
+          isOpen={isQRModalOpen}
+          onClose={() => {
+            setIsQRModalOpen(false);
+            setSelectedRouteForQR(null);
+          }}
+          routeUrl={`${window.location.origin}/?from=${encodeURIComponent(selectedRouteForQR.from)}&to=${encodeURIComponent(selectedRouteForQR.to)}`}
+          routeTitle={`${selectedRouteForQR.from} → ${selectedRouteForQR.to}`}
+        />
+      )}
     </div>
   );
 };
